@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Participants</h2>
+
+<!-- Add form -->
+<form class="row g-3 mb-4" method="post" action="{{ url_for('participants.add') }}" enctype="multipart/form-data">
+    <div class="col-md-3">
+        <input type="text" class="form-control" name="team_name" placeholder="Team Name" required />
+    </div>
+    <div class="col-md-3">
+        <select name="team_category" id="" class="form-control" required>
+            <option value="" selected disabled>Select Category</option>
+            <option value="ELEM">ELEM</option>
+            <option value="JHS">JHS</option>
+            <option value="SHS">SHS</option>
+            <option value="COLLEGE">COLLEGE</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <input type="file" class="form-control" name="team_logo" accept="image/*" />
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-success w-100">Add</button>
+    </div>
+</form>
+
+<!-- Participants table -->
+<table class="table table-striped table-hover shadow-sm">
+    <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Logo</th>
+            <th>Team</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in participants %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>
+                {% if p.team_logo %}
+                    <img src="{{ url_for('static', filename='uploads/logos/' ~ p.team_logo) }}" 
+                         alt="Logo" style="height:40px;">
+                {% else %}
+                    <span class="text-muted">No logo</span>
+                {% endif %}
+            </td>
+            <td>{{ p.team_name }}</td>
+            <td>{{ p.team_category }}</td>
+            <td>
+                <!-- Edit button -->
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ p.id }}">
+                    Edit
+                </button>
+                <!-- Delete button -->
+                <a href="{{ url_for('participants.delete', id=p.id) }}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal{{ p.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ p.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{{ url_for('participants.update', id=p.id) }}" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel{{ p.id }}">Edit Participant {{ p.id }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Team Name</label>
+                                <input type="text" class="form-control" name="team_name" value="{{ p.team_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                <select name="team_category" class="form-control" required>
+                                    <option value="ELEM" {% if p.team_category == "ELEM" %}selected{% endif %}>ELEM</option>
+                                    <option value="JHS" {% if p.team_category == "JHS" %}selected{% endif %}>JHS</option>
+                                    <option value="SHS" {% if p.team_category == "SHS" %}selected{% endif %}>SHS</option>
+                                    <option value="COLLEGE" {% if p.team_category == "COLLEGE" %}selected{% endif %}>COLLEGE</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Logo</label>
+                                {% if p.team_logo %}
+                                    <p><img src="{{ url_for('static', filename='uploads/logos/' ~ p.team_logo) }}" style="height:50px;"></p>
+                                {% endif %}
+                                <input type="file" class="form-control" name="team_logo" accept="image/*">
+                                <small class="text-muted">Leave blank to keep existing logo.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

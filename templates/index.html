@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center my-5">
+  <h1 class="display-5 fw-bold">🏆 Intramural Management System</h1>
+  <p class="lead text-muted">Manage participants, games, matches, and users all in one place.</p>
+</div>
+
+<div class="row text-center">
+  <div class="col-md-3 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Participants</h5>
+        <p class="card-text text-muted">Manage school teams.</p>
+        <a href="{{ url_for('participants.list_participants') }}" class="btn btn-primary w-100">Go</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Games</h5>
+        <p class="card-text text-muted">Set up sports categories.</p>
+        <a href="{{ url_for('games.list_games') }}" class="btn btn-success w-100">Go</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Matches</h5>
+        <p class="card-text text-muted">Schedule and record matches.</p>
+        <a href="{{ url_for('matches.list_matches') }}" class="btn btn-warning w-100">Go</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Users</h5>
+        <p class="card-text text-muted">Manage admins and game managers.</p>
+        <a href="{{ url_for('users.list_users') }}" class="btn btn-danger w-100">Go</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
