@@ -17,7 +17,7 @@ def protect_blueprint(bp, exclude=[]):
             return
         if "user_id" not in session:
             flash("Please log in first.", "warning")
-            return redirect(url_for("users.login"))
+            return redirect(url_for("login"))
 
 def create_app():
     app = Flask(__name__)
@@ -57,7 +57,7 @@ def create_app():
     @app.route("/")
     def index():
         if "user_id" not in session:
-            return redirect(url_for("users.login"))
+            return redirect(url_for("login"))
         games = Game.query.all()
         return render_template("index.html", games=games)
 
@@ -68,7 +68,7 @@ def create_app():
     protect_blueprint(participants_bp)
     protect_blueprint(games_bp)
     protect_blueprint(matches_bp)
-    protect_blueprint(users_bp, exclude=["users.login", "users.register"])
+    protect_blueprint(users_bp, exclude=["login", "users.register"])
 
     app.register_blueprint(participants_bp, url_prefix="/participants")
     app.register_blueprint(games_bp, url_prefix="/games")

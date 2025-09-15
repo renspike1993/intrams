@@ -2,27 +2,30 @@
 {% block content %}
 <h2>Participants</h2>
 
-<!-- Add form -->
-<form class="row g-3 mb-4" method="post" action="{{ url_for('participants.add') }}" enctype="multipart/form-data">
-    <div class="col-md-3">
-        <input type="text" class="form-control" name="team_name" placeholder="Team Name" required />
-    </div>
-    <div class="col-md-3">
-        <select name="team_category" id="" class="form-control" required>
-            <option value="" selected disabled>Select Category</option>
-            <option value="ELEM">ELEM</option>
-            <option value="JHS">JHS</option>
-            <option value="SHS">SHS</option>
-            <option value="COLLEGE">COLLEGE</option>
-        </select>
-    </div>
-    <div class="col-md-3">
-        <input type="file" class="form-control" name="team_logo" accept="image/*" />
-    </div>
-    <div class="col-md-2">
-        <button type="submit" class="btn btn-success w-100">Add</button>
-    </div>
-</form>
+<!-- Add Participant Form in a container -->
+<div class="card shadow-sm mb-4 p-4">
+   
+    <form class="row g-3" method="post" action="{{ url_for('participants.add') }}" enctype="multipart/form-data">
+        <div class="col-md-3">
+            <input type="text" class="form-control" name="team_name" placeholder="Team Name" required>
+        </div>
+        <div class="col-md-3">
+            <select name="team_category" class="form-select" required>
+                <option value="" selected disabled>Select Category</option>
+                <option value="ELEM">ELEM</option>
+                <option value="JHS">JHS</option>
+                <option value="SHS">SHS</option>
+                <option value="COLLEGE">COLLEGE</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="file" class="form-control" name="team_logo" accept="image/*">
+        </div>
+        <div class="col-md-3 d-grid">
+            <button type="submit" class="btn btn-success">Add Participant</button>
+        </div>
+    </form>
+</div>
 
 <!-- Participants table -->
 <table class="table table-striped table-hover shadow-sm">
