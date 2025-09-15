@@ -1,134 +1,208 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <!-- Add Match Button -->
 <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#addMatchModal">Add New Match</button>
 
 <!-- Add Match Modal -->
 <div class="modal fade" id="addMatchModal" tabindex="-1" aria-labelledby="addMatchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-dark text-white">
-            <form method="post" action="{{ url_for('matches.add') }}">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">Matchmaking</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <div class="d-flex justify-content-around align-items-center mb-3">
-                        <!-- Player 1 -->
-                        <div class="text-center">
-                            <img id="player1Logo" src="{{ url_for('static', filename='default_logo.png') }}" 
-                                 alt="Player 1" style="height:120px; width:120px; border-radius:50%; object-fit:cover; border: 3px solid #0d6efd;">
-                            <div class="mt-2 fw-bold" id="player1Name">Player 1</div>
-                            <select class="form-select mt-2" id="player1Select" name="player_1" required>
-                                <option value="">Select Player 1</option>
-                                {% for p in participants %}
-                                <option value="{{ p.id }}" data-logo="{{ url_for('static', filename='uploads/logos/' ~ p.team_logo) }}">{{ p.team_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content bg-dark text-white">
+			<form method="post" action="{{ url_for('matches.add') }}">
+				<div class="modal-header border-0">
+					<h5 class="modal-title">Matchmaking</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body text-center">
+					<div class="d-flex justify-content-around align-items-center mb-3">
+						<!-- Player 1 -->
+						<div class="text-center">
+							<img
+								id="player1Logo"
+								src="{{ url_for('static', filename='default_logo.png') }}"
+								alt="Player 1"
+								style="height: 120px; width: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #0d6efd"
+							/>
+							<div class="mt-2 fw-bold" id="player1Name">Player 1</div>
+							<select class="form-select mt-2" id="player1Select" name="player_1" required>
+								<option value="">Select Player 1</option>
+								{% for p in participants %}
+								<option value="{{ p.id }}" data-logo="{{ url_for('static', filename='uploads/logos/' ~ p.team_logo) }}">{{ p.team_name }}</option>
+								{% endfor %}
+							</select>
+						</div>
 
-                        <div class="fw-bold display-4 text-warning">VS</div>
+						<div class="fw-bold display-4 text-warning">VS</div>
 
-                        <!-- Player 2 -->
-                        <div class="text-center">
-                            <img id="player2Logo" src="{{ url_for('static', filename='default_logo.png') }}" 
-                                 alt="Player 2" style="height:120px; width:120px; border-radius:50%; object-fit:cover; border: 3px solid #dc3545;">
-                            <div class="mt-2 fw-bold" id="player2Name">Player 2</div>
-                            <select class="form-select mt-2" id="player2Select" name="player_2" required>
-                                <option value="">Select Player 2</option>
-                                {% for p in participants %}
-                                <option value="{{ p.id }}" data-logo="{{ url_for('static', filename='uploads/logos/' ~ p.team_logo) }}">{{ p.team_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+						<!-- Player 2 -->
+						<div class="text-center">
+							<img
+								id="player2Logo"
+								src="{{ url_for('static', filename='default_logo.png') }}"
+								alt="Player 2"
+								style="height: 120px; width: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545"
+							/>
+							<div class="mt-2 fw-bold" id="player2Name">Player 2</div>
+							<select class="form-select mt-2" id="player2Select" name="player_2" required>
+								<option value="">Select Player 2</option>
+								{% for p in participants %}
+								<option value="{{ p.id }}" data-logo="{{ url_for('static', filename='uploads/logos/' ~ p.team_logo) }}">{{ p.team_name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
 
-                    <!-- Game Selection -->
-                    <div class="mt-4 text-center">
-                        <label class="form-label">Select Game</label>
-                        <select class="form-select w-50 mx-auto" name="game_id" required>
-                            <option value="">Select Game</option>
-                            {% for g in games %}
-                            <option value="{{ g.id }}">{{ g.game_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <button type="submit" class="btn btn-success btn-lg w-50">Start Match</button>
-                </div>
-            </form>
-        </div>
-    </div>
+					<!-- Game Selection -->
+					<div class="mt-4 text-center">
+						<label class="form-label">Select Game</label>
+						<select class="form-select w-50 mx-auto" name="game_id" required>
+							<option value="">Select Game</option>
+							{% for g in games %}
+							<option value="{{ g.id }}">{{ g.game_name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer border-0 justify-content-center">
+					<button type="submit" class="btn btn-success btn-lg w-50">Start Match</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <!-- Matches Table -->
 <h2 class="mt-5">Matches</h2>
 <table class="table table-striped table-hover shadow-sm align-middle">
-    <thead class="table-primary">
-        <tr>
-            <th>ID</th>
-            <th>Game</th>
-            <th>Player 1</th>
-            <th>Player 2</th>
-            <th>Winner</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for m in matches %}
-        <tr>
-            <td>{{ m.id }}</td>
-            <td>{{ m.game.game_name }}</td>
-            <td class="text-center">
-                <img src="{{ url_for('static', filename='uploads/logos/' ~ m.player1.team_logo) }}" 
-                     alt="{{ m.player1.team_name }}" class="rounded-circle" style="height:40px; width:40px; object-fit:cover;">
-                <div>{{ m.player1.team_name }}</div>
-            </td>
-            <td class="text-center">
-                <img src="{{ url_for('static', filename='uploads/logos/' ~ m.player2.team_logo) }}" 
-                     alt="{{ m.player2.team_name }}" class="rounded-circle" style="height:40px; width:40px; object-fit:cover;">
-                <div>{{ m.player2.team_name }}</div>
-            </td>
-            <td>
-                {% if m.winner_rel %}<strong>{{ m.winner_rel.team_name }}</strong>{% else %}None{% endif %}
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#winnerModal{{ m.id }}">Update Winner</button>
-                <a href="{{ url_for('matches.delete', id=m.id) }}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+	<thead class="table-primary">
+		<tr>
+			<th>ID</th>
+			<th>Game</th>
+			<th>Player 1</th>
+			<th>Player 2</th>
+			<th>Winner</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for m in matches %}
+		<tr>
+			<td>{{ m.id }}</td>
+			<td>{{ m.game.game_name }}</td>
+			<td class="text-center">
+				<img
+					src="{{ url_for('static', filename='uploads/logos/' ~ m.player1.team_logo) }}"
+					alt="{{ m.player1.team_name }}"
+					class="rounded-circle"
+					style="height: 40px; width: 40px; object-fit: cover"
+				/>
+				<div>{{ m.player1.team_name }}</div>
+			</td>
+			<td class="text-center">
+				<img
+					src="{{ url_for('static', filename='uploads/logos/' ~ m.player2.team_logo) }}"
+					alt="{{ m.player2.team_name }}"
+					class="rounded-circle"
+					style="height: 40px; width: 40px; object-fit: cover"
+				/>
+				<div>{{ m.player2.team_name }}</div>
+			</td>
+			<td>{% if m.winner_rel %}<strong>{{ m.winner_rel.team_name }}</strong>{% else %}None{% endif %}</td>
+			<td>
+				<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#winnerModal{{ m.id }}">Update Winner</button>
+				<a href="{{ url_for('matches.delete', id=m.id) }}" class="btn btn-danger btn-sm">Delete</a>
+			</td>
+		</tr>
+		<!-- Winner Update Modals -->
+		{% for m in matches %}
+		<!-- Winner Update Modal -->
+		<div class="modal fade" id="winnerModal{{ m.id }}" tabindex="-1" aria-labelledby="winnerModalLabel{{ m.id }}" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content bg-dark text-white">
+					<form method="post" action="{{ url_for('matches.update_winner', id=m.id) }}">
+						<div class="modal-header border-0">
+							<h5 class="modal-title" id="winnerModalLabel{{ m.id }}">Update Winner: Match {{ m.id }}</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body text-center">
+							<p class="mb-3">Select the winner for <strong>{{ m.player1.team_name }} VS {{ m.player2.team_name }}</strong></p>
+
+							<div class="d-flex justify-content-around align-items-center mb-3 flex-wrap">
+								<!-- Player 1 -->
+								<div class="text-center">
+									<img
+										src="{{ url_for('static', filename='uploads/logos/' ~ m.player1.team_logo) }}"
+										alt="{{ m.player1.team_name }}"
+										class="rounded-circle winner-img {% if m.winner == m.player1.id %}border-success{% endif %}"
+										style="height: 100px; width: 100px; object-fit: cover; border: 3px solid #0d6efd"
+									/>
+									<div class="mt-2 fw-bold">{{ m.player1.team_name }}</div>
+									<div class="form-check mt-2">
+										<input class="form-check-input winner-radio" type="radio" name="winner" value="{{ m.player1.id }}" {% if m.winner == m.player1.id %}checked{% endif %} required>
+										<label class="form-check-label">Winner</label>
+									</div>
+								</div>
+
+								<div class="fw-bold display-4 text-warning my-3">VS</div>
+
+								<!-- Player 2 -->
+								<div class="text-center">
+									<img
+										src="{{ url_for('static', filename='uploads/logos/' ~ m.player2.team_logo) }}"
+										alt="{{ m.player2.team_name }}"
+										class="rounded-circle winner-img {% if m.winner == m.player2.id %}border-success{% endif %}"
+										style="height: 100px; width: 100px; object-fit: cover; border: 3px solid #dc3545"
+									/>
+									<div class="mt-2 fw-bold">{{ m.player2.team_name }}</div>
+									<div class="form-check mt-2">
+										<input class="form-check-input winner-radio" type="radio" name="winner" value="{{ m.player2.id }}" {% if m.winner == m.player2.id %}checked{% endif %} required>
+										<label class="form-check-label">Winner</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer border-0 justify-content-center">
+							<button type="submit" class="btn btn-success btn-lg w-50">Update Winner</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		{% endfor %} {% endfor %}
+	</tbody>
 </table>
 
 <!-- JS to update Add Match logos dynamically -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const player1Select = document.getElementById("player1Select");
-    const player2Select = document.getElementById("player2Select");
-    const player1Logo = document.getElementById("player1Logo");
-    const player2Logo = document.getElementById("player2Logo");
-    const player1Name = document.getElementById("player1Name");
-    const player2Name = document.getElementById("player2Name");
+	document.addEventListener("DOMContentLoaded", function () {
+		const player1Select = document.getElementById("player1Select");
+		const player2Select = document.getElementById("player2Select");
+		const player1Logo = document.getElementById("player1Logo");
+		const player2Logo = document.getElementById("player2Logo");
+		const player1Name = document.getElementById("player1Name");
+		const player2Name = document.getElementById("player2Name");
 
-    function updatePlayer(selectEl, imgEl, nameEl) {
-        const selectedOption = selectEl.options[selectEl.selectedIndex];
-        const logo = selectedOption.getAttribute("data-logo");
-        const name = selectedOption.text;
-        imgEl.src = logo ? logo : "{{ url_for('static', filename='default_logo.png') }}";
-        nameEl.textContent = name;
-    }
+		function updatePlayer(selectEl, imgEl, nameEl) {
+			const selectedOption = selectEl.options[selectEl.selectedIndex];
+			const logo = selectedOption.getAttribute("data-logo");
+			const name = selectedOption.text;
+			imgEl.src = logo ? logo : "{{ url_for('static', filename='default_logo.png') }}";
+			nameEl.textContent = name;
+		}
 
-    function preventSameSelection() {
-        const p1 = player1Select.value;
-        const p2 = player2Select.value;
-        for (let opt of player1Select.options) opt.disabled = (opt.value === p2 && p2 !== "");
-        for (let opt of player2Select.options) opt.disabled = (opt.value === p1 && p1 !== "");
-    }
+		function preventSameSelection() {
+			const p1 = player1Select.value;
+			const p2 = player2Select.value;
+			for (let opt of player1Select.options) opt.disabled = opt.value === p2 && p2 !== "";
+			for (let opt of player2Select.options) opt.disabled = opt.value === p1 && p1 !== "";
+		}
 
-    player1Select.addEventListener("change", () => { updatePlayer(player1Select, player1Logo, player1Name); preventSameSelection(); });
-    player2Select.addEventListener("change", () => { updatePlayer(player2Select, player2Logo, player2Name); preventSameSelection(); });
-});
+		player1Select.addEventListener("change", () => {
+			updatePlayer(player1Select, player1Logo, player1Name);
+			preventSameSelection();
+		});
+		player2Select.addEventListener("change", () => {
+			updatePlayer(player2Select, player2Logo, player2Name);
+			preventSameSelection();
+		});
+	});
 </script>
 {% endblock %}

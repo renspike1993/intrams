@@ -8,8 +8,9 @@
 
 <div class="row text-center">
   <div class="col-md-3 mb-4">
-    <div class="card shadow-sm border-0 h-100">
+    <div class="card shadow-sm border-0 h-100 hover-shadow">
       <div class="card-body">
+        <i class="fas fa-users fa-2x mb-2 text-primary"></i>
         <h5 class="card-title">Participants</h5>
         <p class="card-text text-muted">Manage school teams.</p>
         <a href="{{ url_for('participants.list_participants') }}" class="btn btn-primary w-100">Go</a>
@@ -18,8 +19,9 @@
   </div>
 
   <div class="col-md-3 mb-4">
-    <div class="card shadow-sm border-0 h-100">
+    <div class="card shadow-sm border-0 h-100 hover-shadow">
       <div class="card-body">
+        <i class="fas fa-basketball-ball fa-2x mb-2 text-success"></i>
         <h5 class="card-title">Games</h5>
         <p class="card-text text-muted">Set up sports categories.</p>
         <a href="{{ url_for('games.list_games') }}" class="btn btn-success w-100">Go</a>
@@ -28,8 +30,9 @@
   </div>
 
   <div class="col-md-3 mb-4">
-    <div class="card shadow-sm border-0 h-100">
+    <div class="card shadow-sm border-0 h-100 hover-shadow">
       <div class="card-body">
+        <i class="fas fa-flag fa-2x mb-2 text-warning"></i>
         <h5 class="card-title">Matches</h5>
         <p class="card-text text-muted">Schedule and record matches.</p>
         <a href="{{ url_for('matches.list_matches') }}" class="btn btn-warning w-100">Go</a>
@@ -38,8 +41,9 @@
   </div>
 
   <div class="col-md-3 mb-4">
-    <div class="card shadow-sm border-0 h-100">
+    <div class="card shadow-sm border-0 h-100 hover-shadow">
       <div class="card-body">
+        <i class="fas fa-user-cog fa-2x mb-2 text-danger"></i>
         <h5 class="card-title">Users</h5>
         <p class="card-text text-muted">Manage admins and game managers.</p>
         <a href="{{ url_for('users.list_users') }}" class="btn btn-danger w-100">Go</a>
@@ -47,4 +51,35 @@
     </div>
   </div>
 </div>
+
+<!-- Live Stream Section -->
+{% if games %}
+<h3 class="mt-5 mb-3 text-center">🎥 Live Games</h3>
+<div class="row g-4 justify-content-center">
+  {% for g in games %}
+    {% if g.live_url %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-dark text-white fw-bold text-center">{{ g.game_name }}</div>
+          <div class="card-body p-2">
+            <div class="ratio ratio-16x9">
+              {{ g.live_url | safe }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Optional custom hover effect -->
+<style>
+  .hover-shadow:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.15)!important;
+  }
+</style>
+
 {% endblock %}

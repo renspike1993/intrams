@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+  <div class="card p-4 shadow-sm" style="width: 400px;">
+    <h3 class="text-center mb-3">Register</h3>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" name="username" id="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" id="password" required>
+      </div>
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select class="form-select" name="role" id="role" required>
+          <option value="">Select role</option>
+          <option value="admin">Admin</option>
+          <option value="game_manager">Game Manager</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success w-100">Register</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Already have an account? <a href="{{ url_for('users.login') }}">Login here</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

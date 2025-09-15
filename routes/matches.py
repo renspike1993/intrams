@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from extensions import db
 from models import Match, Game, Participant
+from sqlalchemy import func
+
 
 matches_bp = Blueprint("matches", __name__)
 
@@ -42,3 +44,22 @@ def delete(id):
     db.session.delete(match)
     db.session.commit()
     return redirect(url_for("matches.list_matches"))
+
+# Ranking page: display participants ordered by number of wins
+@matches_bp.route("/ranking")
+def ranking():
+    # Count wins for each participant
+    rankings = (
+        db.session.query(
+            Participant.id,
+            Participant.team_name,
+            Participant.team_logo,
+            func.count(Match.id).label("wins")
+        )
+        .join(Match, Match.winner == Participant.id)
+        .group_by(Participant.id)
+        .order_by(func.count(Match.id).desc())
+        .all()
+    )
+
+    return render_template("ranking.html", rankings=rankings)

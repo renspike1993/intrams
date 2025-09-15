@@ -1,6 +1,5 @@
 from extensions import db
-
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
@@ -45,3 +44,18 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(50), nullable=False)  # "game_manager" or "admin"
+    password_hash = db.Column(db.String(255), nullable=False)  # store hashed password
+    status = db.Column(db.String(20), nullable=False, default="active")  # active/inactive
+
+    # Write-only password property
+    @property
+    def password(self):
+        raise AttributeError("Password is write-only!")
+
+    @password.setter
+    def password(self, plain_password):
+        self.password_hash = generate_password_hash(plain_password)
+
+    # Verify password
+    def check_password(self, plain_password):
+        return check_password_hash(self.password_hash, plain_password)
