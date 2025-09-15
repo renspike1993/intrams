@@ -8,7 +8,7 @@ from routes.games import games_bp
 from routes.matches import matches_bp
 from routes.users import users_bp
 
-def protect_blueprint(bp, exclude=[]):
+def protect_blueprint(bp, exclude=['index']):
     """Protect all routes in a blueprint except endpoints in exclude list."""
     @bp.before_request
     def require_login():

@@ -63,7 +63,7 @@
           <div class="card-header bg-dark text-white fw-bold text-center">{{ g.game_name }}</div>
           <div class="card-body p-2">
             <div class="ratio ratio-16x9">
-              {{ g.live_url | safe }}
+              {{ g.live_url | replace('show_text=false', 'show_text=false&autoplay=1') | safe }}
             </div>
           </div>
         </div>
