@@ -59,3 +59,19 @@ class User(db.Model):
     # Verify password
     def check_password(self, plain_password):
         return check_password_hash(self.password_hash, plain_password)
+    
+    
+class Result(db.Model):
+    __tablename__ = "results"
+
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey("games.id"), nullable=False)
+    first = db.Column(db.Integer, db.ForeignKey("participants.id"), nullable=False)
+    second = db.Column(db.Integer, db.ForeignKey("participants.id"), nullable=False)
+    third = db.Column(db.Integer, db.ForeignKey("participants.id"), nullable=False)
+
+    # relationships
+    game = db.relationship("Game", backref="results")
+    first_rel = db.relationship("Participant", foreign_keys=[first])
+    second_rel = db.relationship("Participant", foreign_keys=[second])
+    third_rel = db.relationship("Participant", foreign_keys=[third])

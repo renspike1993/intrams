@@ -13,8 +13,10 @@ def list_users():
 def add():
     name = request.form["name"]
     role = request.form["role"]
+    password = request.form["password"]   # get from form input
 
     new_user = User(name=name, role=role)
+    new_user.password = password  # uses the password setter -> hashes it
     db.session.add(new_user)
     db.session.commit()
 

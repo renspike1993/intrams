@@ -3,36 +3,105 @@
 {% block content %}
 <div class="text-center my-5">
   <h1 class="display-5 fw-bold">🏅 Team Rankings</h1>
-  <p class="lead text-muted">Ranked by the number of wins in matches</p>
+  <p class="lead text-muted">Ranked by points from game results</p>
 </div>
 
+<!-- Rankings Table -->
 {% if rankings %}
-<table class="table table-striped table-hover shadow-sm align-middle text-center">
-  <thead class="table-primary">
-    <tr>
-      <th>Rank</th>
-      <th>Team</th>
-      <th>Logo</th>
-      <th>Wins</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for team in rankings %}
-    <tr>
-      <td>{{ loop.index }}</td> <!-- Use loop.index instead of enumerate -->
-      <td>{{ team.team_name }}</td>
-      <td>
-        <img src="{{ url_for('static', filename='uploads/logos/' ~ team.team_logo) }}"
-             alt="{{ team.team_name }}"
-             class="rounded-circle"
-             style="height:50px; width:50px; object-fit:cover;">
-      </td>
-      <td>{{ team.wins }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="d-flex justify-content-end mb-2">
+  <button onclick="printSection('rankings-section')" class="btn btn-outline-primary btn-sm">
+    <i class="fas fa-print me-1"></i> Print Rankings
+  </button>
+</div>
+<div id="rankings-section">
+  <table class="table table-striped table-hover shadow-sm align-middle text-center mb-5">
+    <thead class="table-primary">
+      <tr>
+        <th>Rank</th>
+        <th>Team</th>
+        <th>Logo</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for team in rankings %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ team.team_name }}</td>
+        <td>
+          {% if team.team_logo %}
+          <img src="{{ url_for('static', filename='uploads/logos/' ~ team.team_logo) }}"
+               alt="{{ team.team_name }}"
+               class="rounded-circle"
+               style="height:50px; width:50px; object-fit:cover;">
+          {% else %}
+          <span class="text-muted">No Logo</span>
+          {% endif %}
+        </td>
+        <td>{{ team.wins }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
-<p class="text-center mt-5 text-muted">No matches have been played yet.</p>
+<p class="text-center mt-5 text-muted">No results have been recorded yet.</p>
 {% endif %}
+
+
+<!-- Game Results Section -->
+<div class="text-center my-5">
+  <h2 class="fw-bold">🎮 Game Results</h2>
+  <p class="text-muted">Winners for each game</p>
+</div>
+
+{% if games and results %}
+<div class="d-flex justify-content-end mb-2">
+  <button onclick="printSection('results-section')" class="btn btn-outline-success btn-sm">
+    <i class="fas fa-print me-1"></i> Print Game Results
+  </button>
+</div>
+<div id="results-section">
+  <table class="table table-bordered table-hover shadow-sm align-middle text-center">
+    <thead class="table-secondary">
+      <tr>
+        <th>Game</th>
+        <th>1st Place 🥇</th>
+        <th>2nd Place 🥈</th>
+        <th>3rd Place 🥉</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in games %}
+        {% set r = results.get(g.id) %}
+        <tr>
+          <td>{{ g.game_name }}</td>
+          {% if r %}
+            <td>{{ r.first_rel.team_name if r.first_rel else '-' }}</td>
+            <td>{{ r.second_rel.team_name if r.second_rel else '-' }}</td>
+            <td>{{ r.third_rel.team_name if r.third_rel else '-' }}</td>
+          {% else %}
+            <td colspan="3" class="text-muted">No results yet</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="text-center mt-5 text-muted">No game results available.</p>
+{% endif %}
+
+<!-- Print Script -->
+<script>
+function printSection(sectionId) {
+  var printContents = document.getElementById(sectionId).innerHTML;
+  var originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = printContents;
+  window.print();
+  document.body.innerHTML = originalContents;
+}
+</script>
+
 {% endblock %}
